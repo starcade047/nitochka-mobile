@@ -3178,12 +3178,21 @@ button,label { touch-action:manipulation; }
 
             importBackup(e) {
                 const file = e.target.files[0];
+                e.target.value = '';
                 if (!file) return;
+                if (file.size === 0) { alert('Выбран пустой файл (0 байт). Скачайте JSON заново и выберите его из папки «Загрузки». Текущие данные сохранены.'); return; }
 
                 const reader = new FileReader();
-                reader.onload = (event) => {
+                reader.onload = async (event) => {
                     try {
-                        const importedData = JSON.parse(event.target.result);
+                        let text = String(event.target.result || '').replace(/^\uFEFF/, '').trim();
+                        if (!text && typeof file.text === 'function') text = (await file.text()).replace(/^\uFEFF/, '').trim();
+                        if (!text) throw new Error('Не удалось прочитать содержимое файла. Скачайте его в «Загрузки» и откройте сайт в полноценном браузере.');
+                        let importedData;
+                        try { importedData = JSON.parse(text); }
+                        catch(parseError) { throw new Error('JSON неполный или повреждён. Скачайте файл заново. Прочитано символов: ' + text.length + '. Текущие данные не изменены.'); }
+                        const candidateTasks = Array.isArray(importedData) ? importedData : importedData?.tasks;
+                        if (!Array.isArray(candidateTasks) || candidateTasks.some(t=>!t || typeof t.id!=='string' || typeof t.title!=='string' || (t.subtasks!==undefined&&!Array.isArray(t.subtasks)))) throw new Error('Это не резервная копия Nitochka с массивом tasks.');
                         if (importedData && typeof importedData === 'object') {
                             if (Array.isArray(importedData.tasks)) {
                                 this.tasks = importedData.tasks;
@@ -3214,7 +3223,8 @@ button,label { touch-action:manipulation; }
                         alert('Ошибка при импорте файла: ' + err.message);
                     }
                 };
-                reader.readAsText(file);
+                reader.onerror = () => alert('Браузер не смог прочитать файл. Сохраните его в «Загрузки» и выберите заново. Текущие данные не изменены.');
+                reader.readAsText(file, 'UTF-8');
             }
 
             escapeHtml(str) {
