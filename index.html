@@ -2051,7 +2051,29 @@ button,label { touch-action:manipulation; }
                 const listEl = document.getElementById('cal-modal-tasks-list');
                 listEl.innerHTML = '';
 
-                taskItems.forEach(item => {
+                const visibleItems = taskItems.filter(item => !item.subtask.completed);
+                const lessons = visibleItems.filter(item => this.calendarKind(item) === 'school' && item.subtask.dateStart === dateStr);
+                const markAttended = items => {
+                    for (const { subtask } of items) {
+                        subtask.completed = true;
+                        subtask.attendance = 'attended';
+                    }
+                    this.saveToStorage();
+                    if (this.activeTaskId) this.renderCanvasNodes();
+                    this.openCalendarDayModal(dateStr, taskItems);
+                };
+                const attendanceButton = (label, items) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.textContent = label;
+                    button.style.cssText = 'padding:8px 12px;border-radius:8px;background:#1d4ed8;color:white;font-size:12px;font-weight:700;align-self:flex-start';
+                    button.onclick = () => markAttended(items);
+                    return button;
+                };
+                if (lessons.length) listEl.appendChild(attendanceButton('Все пары посещены', lessons));
+                if (!visibleItems.length) listEl.textContent = 'Все задачи на эту дату закрыты.';
+
+                visibleItems.forEach(item => {
                     const sub = item.subtask;
                     const card = document.createElement('div');
                     card.className = 'p-3 bg-purple-50 border border-purple-200 rounded-xl flex flex-col gap-1 shadow-sm';
@@ -2084,6 +2106,7 @@ button,label { touch-action:manipulation; }
                             </button>
                         </div>
                     `;
+                    if (lessons.includes(item)) card.appendChild(attendanceButton('Отметить посещение', [item]));
                     listEl.appendChild(card);
                 });
 
