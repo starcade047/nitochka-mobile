@@ -473,7 +473,112 @@ button,label { touch-action:manipulation; }
  footer>div { align-items:flex-start !important; }
  footer>div>div:first-child { flex-wrap:wrap; gap:12px; }
 }
-</style></head>
+</style>
+    <style id="nitochka-design-refinement">
+        .bg-japanese-pattern {
+            background-color: #F5F2EB;
+            background-image: radial-gradient(ellipse at top, rgba(250,247,242,.8), transparent 72%),
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2296%22%20height%3D%2248%22%20viewBox%3D%220%200%2096%2048%22%3E%0A%3Cdefs%3E%3Cg%20id%3D%22wave%22%3E%0A%3Cpath%20d%3D%22M-24%200A24%2024%200%200%201%2024%200Z%22%20fill%3D%22%23F5F2EB%22%2F%3E%0A%3Cpath%20d%3D%22M-23%200A23%2023%200%200%201%2023%200M-18%200A18%2018%200%200%201%2018%200M-13%200A13%2013%200%200%201%2013%200M-8%200A8%208%200%200%201%208%200%22%20fill%3D%22none%22%20stroke%3D%22%23EBE5D8%22%20stroke-width%3D%221.4%22%2F%3E%0A%3Cpath%20d%3D%22M-21%200A21%2021%200%200%201%2021%200M-11%200A11%2011%200%200%201%2011%200%22%20fill%3D%22none%22%20stroke%3D%22%23FAF7F2%22%20stroke-width%3D%22.75%22%2F%3E%0A%3Ccircle%20cy%3D%22-3%22%20r%3D%221.15%22%20fill%3D%22%23EBE5D8%22%2F%3E%0A%3C%2Fg%3E%3C%2Fdefs%3E%0A%3Cpath%20fill%3D%22%23F5F2EB%22%20d%3D%22M0%200h96v48H0z%22%2F%3E%0A%3Cuse%20href%3D%22%23wave%22%20x%3D%220%22%20y%3D%2212%22%2F%3E%3Cuse%20href%3D%22%23wave%22%20x%3D%2248%22%20y%3D%2212%22%2F%3E%3Cuse%20href%3D%22%23wave%22%20x%3D%2296%22%20y%3D%2212%22%2F%3E%0A%3Cuse%20href%3D%22%23wave%22%20x%3D%2224%22%20y%3D%2236%22%2F%3E%3Cuse%20href%3D%22%23wave%22%20x%3D%2272%22%20y%3D%2236%22%2F%3E%0A%3Cuse%20href%3D%22%23wave%22%20x%3D%220%22%20y%3D%2260%22%2F%3E%3Cuse%20href%3D%22%23wave%22%20x%3D%2248%22%20y%3D%2260%22%2F%3E%3Cuse%20href%3D%22%23wave%22%20x%3D%2296%22%20y%3D%2260%22%2F%3E%0A%3C%2Fsvg%3E");
+            background-size: 100% 560px, 96px 48px;
+            background-repeat: no-repeat, repeat;
+        }
+        body > header, body > footer {
+            background: rgba(250,247,242,.96);
+            box-shadow: inset 0 1px 0 #fff, 0 4px 18px rgba(114,159,207,.12);
+        }
+        #dashboard-view > div > div:first-child > div,
+        #dashboard-view .due-panel {
+            border-radius: 18px;
+        }
+        #dashboard-view > div > div:first-child > div {
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 5px 16px rgba(114,159,207,.12);
+        }
+        #dashboard-view > div > div:nth-child(2) > div:first-child {
+            padding: 14px 16px;
+            background: rgba(250,247,242,.9);
+            border: 1px solid rgba(192,216,246,.65);
+            border-radius: 18px;
+            box-shadow: inset 0 1px 0 #fff;
+        }
+        #tasks-grid { gap: 18px; }
+        #tasks-grid > .divine-card {
+            background: linear-gradient(155deg, #fff 0%, #FAF7F2 45%, #F5F2EB 100%);
+            border-color: rgba(192,216,246,.72);
+            box-shadow: inset 0 1px 0 #fff, 0 5px 18px rgba(114,159,207,.15);
+            backdrop-filter: none;
+        }
+        #tasks-grid > .divine-card:hover {
+            border-color: #729FCF;
+            box-shadow: inset 0 1px 0 #fff, 0 8px 20px rgba(114,159,207,.24);
+        }
+        #canvas-node-layer .divine-card { backdrop-filter: none; }
+        #task-modal > .divine-card, #subtask-modal > .divine-card,
+        #calendar-day-modal > .divine-card {
+            background: linear-gradient(160deg, #fff, #FAF7F2);
+            box-shadow: 0 20px 55px rgba(44,53,57,.22), inset 0 1px 0 #fff;
+        }
+        button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+            outline: 2px solid #729FCF;
+            outline-offset: 3px;
+        }
+        @media (max-width: 767px) {
+            #tasks-grid { gap: 14px; }
+            #dashboard-view > div > div:nth-child(2) > div:first-child { padding: 12px; }
+        }
+    </style>
+
+<style id="nitochka-task-themes">
+#tasks-grid > [data-task-theme="evy"] { --card-surface:#ffffff; --card-edge:#fff3f1; --card-ink:#8a2428; --progress-dark:#c82132; --progress-color:#f77c77; --motif-opacity:0.26; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%238a2428%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22w%22%20width%3D%2232%22%20height%3D%2218%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M0%2018a16%2016%200%200%201%2032%200M4%2018a12%2012%200%200%201%2024%200M8%2018a8%208%200%200%201%2016%200%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M0%2045h180v115H0z%22%20fill%3D%22url(%23w)%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%226%22%20transform%3D%22translate(131%2054)%22%3E%3Ccircle%20r%3D%2221%22%2F%3E%3Cpath%20d%3D%22m-15-15-8-8m38%208%208-8m-38%2038-8%208m38-8%208%208%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="reload"] { --card-surface:#ffffff; --card-edge:#f5eeee; --card-ink:#54282e; --progress-dark:#27202a; --progress-color:#82717a; --motif-opacity:0.34; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%2354282e%22%3E%3Cg%20color%3D%22%2324232a%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22w%22%20width%3D%2232%22%20height%3D%2218%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M0%2018a16%2016%200%200%201%2032%200M4%2018a12%2012%200%200%201%2024%200M8%2018a8%208%200%200%201%2016%200%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M0%2045h180v115H0z%22%20fill%3D%22url(%23w)%22%2F%3E%3C%2Fg%3E%3Cg%20color%3D%22%23b12531%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%226%22%20transform%3D%22translate(131%2054)%22%3E%3Ccircle%20r%3D%2221%22%2F%3E%3Cpath%20d%3D%22m-15-15-8-8m38%208%208-8m-38%2038-8%208m38-8%208%208%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="aura"] { --card-surface:#fcfaff; --card-edge:#ede6fb; --card-ink:#503674; --progress-dark:#6431ac; --progress-color:#b68cf1; --motif-opacity:0.45; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23503674%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22currentColor%22%3E%3Cellipse%20cx%3D%22121%22%20cy%3D%2275%22%20rx%3D%2254%22%20ry%3D%2228%22%20transform%3D%22rotate(-25%20121%2075)%22%2F%3E%3Cellipse%20cx%3D%22121%22%20cy%3D%2275%22%20rx%3D%2265%22%20ry%3D%2238%22%20transform%3D%22rotate(-25%20121%2075)%22%20stroke-dasharray%3D%222%206%22%2F%3E%3Ccircle%20cx%3D%22124%22%20cy%3D%2275%22%20r%3D%2227%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22m124%2039%205%2031%2031%205-31%205-5%2031-5-31-31-5%2031-5zM157%2018l2%208%208%202-8%202-2%208-2-8-8-2%208-2z%22%20fill%3D%22currentColor%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="birch"] { --card-surface:#ffffff; --card-edge:#f0f5e9; --card-ink:#30482e; --progress-dark:#43752d; --progress-color:#93bd5a; --motif-opacity:0.55; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%2330482e%22%3E%3Cpath%20d%3D%22M100%200h18l-6%20160H92zM148%200h13l-2%20160h-13z%22%20fill%3D%22%23fff%22%20stroke%3D%22%23d5ddd1%22%2F%3E%3Cpath%20d%3D%22m99%2019%2014%202m-16%2019%2010%201m-8%2032%2015%202m-17%2029%208%201m-9%2038%2013%202m37-131%2010%201m-10%2034%209%201m-9%2026%2013%201m-13%2033%208%201%22%20stroke%3D%22%23272b27%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M120%2024q13-13%2024-7-6%2018-24%207m7%2024q-15-14-25-7%204%2017%2025%207m36%2037q-14-15-24-8%205%2016%2024%208m-21%2028q-15-10-24-3%209%2016%2024%203%22%20fill%3D%22currentColor%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="aist"] { --card-surface:#edf8eb; --card-edge:#cde5d2; --card-ink:#24543b; --progress-dark:#008960; --progress-color:#57c999; --motif-opacity:0.5; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%2324543b%22%3E%3Cpath%20d%3D%22M55%20103q27-28%2054-28l15-33q5-13%2018-6l15%209-20%202-11%2034q-9%2025-37%2026l19%2020-6%203-26-24z%22%20fill%3D%22currentColor%22%2F%3E%3Cpath%20d%3D%22m138%2045%2035%201-33%207M96%20105l30%2028m-23-29%2043%2021%22%20fill%3D%22none%22%20stroke%3D%22%239d2b38%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M57%20137q18-11%2035%200t35%200t35%200%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="coins"] { --card-surface:#0a1633; --card-edge:#1b325d; --card-ink:#ffe3a3; --progress-dark:#a96816; --progress-color:#ffd87b; --motif-opacity:0.65; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23ffe3a3%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%2393601e%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23ffe3a3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23b67c29%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%20transform%3D%22translate(128%2079)%20rotate(-18)%22%3E%3Ccircle%20r%3D%2242%22%20fill%3D%22url(%23g)%22%2F%3E%3Ccircle%20r%3D%2236%22%20fill%3D%22none%22%20stroke%3D%22%23493316%22%2F%3E%3Ccircle%20r%3D%2232%22%20fill%3D%22none%22%20stroke%3D%22%23fff0bd%22%20stroke-dasharray%3D%221%203%22%2F%3E%3Cpath%20d%3D%22m0-21%2019%2021-19%2021-19-21z%22%20fill%3D%22none%22%20stroke%3D%22%2364451c%22%20stroke-width%3D%222%22%2F%3E%3Ccircle%20r%3D%225%22%20fill%3D%22%2364451c%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="home"] { --card-surface:#fffaf5; --card-edge:#f6e1d4; --card-ink:#694432; --progress-dark:#9d4e38; --progress-color:#e7a98c; --motif-opacity:0.34; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23694432%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22p%22%20width%3D%2222%22%20height%3D%2222%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M0%200l22%2022m0-22L0%2022M11%200v22M0%2011h22%22%20stroke%3D%22currentColor%22%20stroke-width%3D%22.6%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20x%3D%2272%22%20y%3D%220%22%20width%3D%22108%22%20height%3D%22160%22%20fill%3D%22url(%23p)%22%2F%3E%3Cpath%20d%3D%22M100%2073l25-23%2025%2023v36h-50zM119%20109V88h13v21%22%20fill%3D%22%23fffaf5%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="drive"] { --card-surface:#edf8ff; --card-edge:#dbeaf8; --card-ink:#184465; --progress-dark:#0069b4; --progress-color:#60baff; --motif-opacity:0.46; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23184465%22%3E%3Cpath%20d%3D%22M82%20158c56-38-15-62%2034-97s51-44%2037-63M113%20162c56-39-17-63%2026-92s46-45%2032-72%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22M98%20160c54-39-16-64%2031-95s47-42%2034-66%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%228%208%22%2F%3E%3Ccircle%20cx%3D%22127%22%20cy%3D%2265%22%20r%3D%225%22%20fill%3D%22currentColor%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="svag"] { --card-surface:#17232e; --card-edge:#274451; --card-ink:#d7f5ff; --progress-dark:#a3247d; --progress-color:#fa7ec6; --motif-opacity:0.58; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23d7f5ff%22%3E%3Cg%20color%3D%22%2384d0e5%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22w%22%20width%3D%2232%22%20height%3D%2218%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M0%2018a16%2016%200%200%201%2032%200M4%2018a12%2012%200%200%201%2024%200M8%2018a8%208%200%200%201%2016%200%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M0%2045h180v115H0z%22%20fill%3D%22url(%23w)%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M41%20144%20170%2019m-88%2093%2061-59%22%20stroke%3D%22%23ef8ed1%22%20stroke-width%3D%222%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22m149%2036%203%2011%2011%203-11%203-3%2011-3-11-11-3%2011-3z%22%20fill%3D%22%23ffbfeb%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="collector"] { --card-surface:#f1f2f4; --card-edge:#dfe2e8; --card-ink:#384154; --progress-dark:#777b95; --progress-color:#d0d3e7; --motif-opacity:0.66; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23384154%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23ead0e1%22%2F%3E%3Cstop%20offset%3D%22.32%22%20stop-color%3D%22%23d9d7f2%22%2F%3E%3Cstop%20offset%3D%22.58%22%20stop-color%3D%22%23c7e7e4%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23e8e7cf%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f1d9d1%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M55%20115Q61%2084%2094%2088q4-34%2033-35%2028-1%2031%2025%2022-2%2022%2021v28H67q-15%200-12-12z%22%20fill%3D%22url(%23g)%22%2F%3E%3Cpath%20d%3D%22M75%20126q42-18%2099-13M88%20105q43-18%2082-11M107%2082q28-16%2050-10%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20opacity%3D%22.65%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="game"] { --card-surface:#310d15; --card-edge:#6b1728; --card-ink:#ffe4e8; --progress-dark:#8a1737; --progress-color:#ee6391; --motif-opacity:0.65; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23ffe4e8%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22p%22%20width%3D%2235%22%20height%3D%2228%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22m0%207%2013-6%2012%206%2010%2015-15%205-12-6z%22%20fill%3D%22%23751b2d%22%20stroke%3D%22%23250a10%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22m2%207%2011-5%2011%206m-16%2013%2012%205%2013-4%22%20fill%3D%22none%22%20stroke%3D%22%23a33347%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20x%3D%2245%22%20width%3D%22135%22%20height%3D%22160%22%20fill%3D%22url(%23p)%22%2F%3E%3Cpath%20d%3D%22m116%2038%2021%2015%2025-18-9%2027-16%208-14-10z%22%20fill%3D%22%23390e18%22%2F%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme="school"] { --card-surface:#f2f8f8; --card-edge:#d7ebeb; --card-ink:#204d55; --progress-dark:#176977; --progress-color:#65c3c6; --motif-opacity:0.45; --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20160%22%20color%3D%22%23204d55%22%3E%3Cdefs%3E%3Cpattern%20id%3D%22g%22%20width%3D%2214%22%20height%3D%2214%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M14%200H0v14%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%22.55%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20x%3D%2258%22%20width%3D%22122%22%20height%3D%22160%22%20fill%3D%22url(%23g)%22%2F%3E%3Cg%20transform%3D%22rotate(-13%20126%2084)%22%20stroke%3D%22currentColor%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M108%2023v120m35-120v120%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M99%2034h54m-54%2014h54m-54%2014h54m-54%2014h54m-54%2014h54m-54%2014h54m-54%2014h54m-54%2014h54%22%20stroke-width%3D%222%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); }
+#tasks-grid > [data-task-theme] {
+    position: relative; isolation:isolate; overflow:hidden; min-width:0;
+    background:linear-gradient(120deg,var(--card-surface) 30%,var(--card-edge));
+    border-color: color-mix(in srgb,var(--card-ink) 26%,var(--card-edge));
+    box-shadow:0 5px 16px rgba(44,53,57,.13),inset 0 1px 0 rgba(255,255,255,.21);
+}
+#tasks-grid > [data-task-theme]::before {
+    content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    opacity:var(--motif-opacity); background:var(--motif) right center / auto 100% no-repeat;
+    mask-image:linear-gradient(90deg,transparent 38%,#000 80%);
+}
+#tasks-grid > [data-task-theme]::after {
+    content:''; position:absolute; inset:0 auto 0 0; width:3px; z-index:-1;
+    background:linear-gradient(var(--progress-dark),var(--progress-color)); pointer-events:none;
+}
+#tasks-grid > [data-task-theme] :is(h3,.text-jp-sky,.text-jp-skyMuted) { color:var(--card-ink); }
+#tasks-grid > [data-task-theme] .task-progress-track {
+    background:color-mix(in srgb,var(--card-ink) 12%,var(--card-surface));
+    border-color:color-mix(in srgb,var(--card-ink) 24%,var(--card-surface));
+}
+#tasks-grid > [data-task-theme] .reload-emerald-bar {
+    background-image:linear-gradient(110deg,#201c24,#69616b,#a72638,#201c24);
+    border-color:#4a343e; box-shadow:0 0 7px #a7263840;
+}
+#tasks-grid > [data-task-theme] .reload-emerald-bar::before {
+    background-image:radial-gradient(circle,#fff 0 .7px,transparent 1.4px),radial-gradient(circle,#f2a5ae 0 .6px,transparent 1.2px);
+}
+#tasks-grid > [data-task-theme] .reload-emerald-bar::after {
+    background:linear-gradient(105deg,transparent 35%,#ffffff66 50%,transparent 65%);
+}
+#tasks-grid > [data-task-theme="collector"] .task-progress-fill {
+    background-image:linear-gradient(110deg,#777b95,#dbc7e2,#abd9d2,#e7d8ab,#aeb8df,#777b95);
+}
+@media (max-width:480px) {
+    #tasks-grid > [data-task-theme]::before { background-size:auto 88%; mask-image:linear-gradient(90deg,transparent 46%,#000 90%); }
+    #tasks-grid > [data-task-theme] { padding:16px; }
+}
+</style>
+</head>
 
 <body class="min-h-screen flex flex-col justify-between bg-japanese-pattern selection:bg-jp-skyPale selection:text-jp-textDark">
 
@@ -2234,6 +2339,10 @@ button,label { touch-action:manipulation; }
                     const stats = this.calculateTaskStats(task);
                     const card = document.createElement('div');
                     card.className = 'divine-card rounded-2xl p-5 flex flex-col justify-between group cursor-pointer';
+                    const themeIds = {"task_1790875169810":"evy","task_1793513040292":"reload","task_1790869445272":"aura","task_1790842850629":"birch","task_1790872467800":"aist","task_1790876742861":"coins","task_1790844800478":"home","task_1790844082557":"drive","task_1790871093031":"svag","task_1790870302227":"collector","task_1790876278340":"game","task_1790842985202":"school"};
+                    const themeTitles = {"evy planiki":"evy","reload":"reload","aura 047":"aura","hesychasm 34":"birch","aist":"aist","currency coins":"coins","home":"home","drive":"drive","svag":"svag","collector":"collector","game ioi":"game","учёба кжт":"school"};
+                    const theme = themeIds[task.id] || themeTitles[task.title.trim().toLowerCase()];
+                    if (theme) card.dataset.taskTheme = theme;
                     
                     card.innerHTML = `
                         <div>
@@ -2278,8 +2387,8 @@ button,label { touch-action:manipulation; }
                                 <span class="text-jp-skyMuted">Прогресс подзадач</span>
                                 ${this.isReloadTask(task) ? '' : `<span class="text-jp-sky font-mono font-bold">${stats.percent}%</span>`}
                             </div>
-                            ${this.isReloadTask(task) ? '<div class="reload-emerald-bar" aria-hidden="true"></div>' : `<div class="w-full h-2 bg-jp-beige rounded-full overflow-hidden mb-4 border border-jp-skyPale/40">
-                                <div class="task-progress-fill" style="width: ${stats.percent}%; ${this.progressPalette(task)}"></div>
+                            ${this.isReloadTask(task) ? '<div class="reload-emerald-bar" aria-hidden="true"></div>' : `<div class="task-progress-track w-full h-2 bg-jp-beige rounded-full overflow-hidden mb-4 border border-jp-skyPale/40">
+                                <div class="task-progress-fill" style="width: ${stats.percent}%; ${theme ? '' : this.progressPalette(task)}"></div>
                             </div>`}
 
                             <div class="flex justify-between items-center pt-3 border-t border-jp-skyPale/30 text-xs">
