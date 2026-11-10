@@ -578,6 +578,41 @@ button,label { touch-action:manipulation; }
     #tasks-grid > [data-task-theme] { padding:16px; }
 }
 </style>
+
+<style id="nitochka-moon-calendar">
+:root { --cal-school:#e3bc71; --cal-reload:#ef7563; --cal-other:#eee7dd; }
+#dashboard-view .moon-calendar {
+    padding:14px; color:#f5eee2; border:1px solid #6e5940;
+    background:radial-gradient(ellipse at top,rgba(215,183,122,.12),transparent 55%),
+        url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2072%2040%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23d7b77a%22%20stroke-opacity%3D%22.12%22%3E%3Cpath%20d%3D%22M0%2020a18%2018%200%200%201%2036%200m-31%200a13%2013%200%200%201%2026%200m-21%200a8%208%200%200%201%2016%200M36%2020a18%2018%200%200%201%2036%200m-31%200a13%2013%200%200%201%2026%200m-21%200a8%208%200%200%201%2016%200M18%2040a18%2018%200%200%201%2036%200m-31%200a13%2013%200%200%201%2026%200m-21%200a8%208%200%200%201%2016%200%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") left bottom / 72px 40px repeat,
+        linear-gradient(150deg,#322d31,#201e24 70%);
+    box-shadow:inset 0 1px 0 #ffffff18,0 9px 20px #2119232c;
+}
+.moon-calendar .calendar-header { border-color:#d7b77a48; color:#e3bc71; }
+.moon-calendar .calendar-header button { width:34px;height:34px;border:1px solid #d7b77a55;border-radius:9px;color:#f5e1b8;font-size:20px; }
+.moon-calendar .calendar-header button:hover { background:#d7b77a25; }
+.calendar-moons { display:block; width:100%;height:27px;margin:0 auto 8px; }
+.moon-calendar .calendar-clock { padding:7px; margin-bottom:12px; border-radius:10px; text-align:center; background:#1d1b22c9; border:1px solid #d7b77a40; }
+.moon-calendar #live-clock-time { color:#f1d8a8; }
+.moon-calendar #live-clock-date { color:#e2d3bf; }
+#calendar-days-grid { gap:3px; }
+.moon-calendar .moon-day { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:33px;border:1px solid transparent;border-radius:7px;color:#f5eee2;font-variant-numeric:tabular-nums; }
+.moon-calendar button.moon-day { cursor:pointer;background:#19171ddd;border-color:#d7b77a36; }
+.moon-calendar button.moon-day:hover { background:#453844; }
+.moon-calendar .moon-day[aria-current="date"] { border-color:#e3bc71;color:#ffe0a0;font-weight:800; }
+.moon-calendar button:focus-visible { outline:2px solid #e3bc71;outline-offset:2px; }
+.calendar-markers { display:flex;gap:3px;min-height:3px; }
+.calendar-marker { display:inline-block;width:6px;height:3px;border-radius:2px;background:var(--cal-other); }
+.calendar-marker[data-kind="school"] { background:var(--cal-school); }
+.calendar-marker[data-kind="reload"] { background:var(--cal-reload); }
+.calendar-legend { display:flex;flex-wrap:wrap;justify-content:center;gap:5px 10px;margin-top:12px;padding-top:9px;border-top:1px solid #d7b77a40;color:#e5d6c2;font-size:10px; }
+.calendar-legend span { display:inline-flex;align-items:center;gap:4px; }
+#calendar-day-modal .calendar-event { background:#faf7f2;border-color:#c7bcae; }
+#calendar-day-modal .calendar-event[data-kind="school"] { background:#fff7e6;border-color:#d7b77a; }
+#calendar-day-modal .calendar-event[data-kind="reload"] { background:#fff0ed;border-color:#df8a7e; }
+#calendar-day-modal .calendar-event [class*="text-purple-"] { color:#594436; }
+#calendar-day-modal .calendar-event [class*="bg-purple-"] { background:#eee3d5; }
+</style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between bg-japanese-pattern selection:bg-jp-skyPale selection:text-jp-textDark">
@@ -631,19 +666,28 @@ button,label { touch-action:manipulation; }
             
             <div class="w-full lg:w-72 flex flex-col gap-4 flex-shrink-0">
                 <!-- CALENDAR BOX -->
-                <div class="w-full bg-jp-timeBg border-2 border-jp-timeBorder rounded-2xl p-4 shadow-md text-jp-timeText">
-                    <div class="flex items-center justify-between border-b border-jp-timeBorder/60 pb-2 mb-3">
+                <div class="moon-calendar w-full rounded-2xl">
+                    <div class="calendar-header flex items-center justify-between border-b pb-2 mb-2">
                         <div class="flex items-center gap-2">
                             <i class="fa-regular fa-calendar-days text-base"></i>
                             <span id="calendar-month-year" class="font-serif font-bold text-xs uppercase tracking-wider"></span>
                         </div>
                         <div class="flex items-center space-x-1">
-                            <button onclick="app.changeCalendarMonth(-1)" class="w-6 h-6 rounded-full hover:bg-emerald-200/60 flex items-center justify-center text-xs font-bold transition-colors">‹</button>
-                            <button onclick="app.changeCalendarMonth(1)" class="w-6 h-6 rounded-full hover:bg-emerald-200/60 flex items-center justify-center text-xs font-bold transition-colors">›</button>
+                            <button type="button" aria-label="Предыдущий месяц" onclick="app.changeCalendarMonth(-1)" class="w-6 h-6 rounded-full hover:bg-emerald-200/60 flex items-center justify-center text-xs font-bold transition-colors">‹</button>
+                            <button type="button" aria-label="Следующий месяц" onclick="app.changeCalendarMonth(1)" class="w-6 h-6 rounded-full hover:bg-emerald-200/60 flex items-center justify-center text-xs font-bold transition-colors">›</button>
                         </div>
                     </div>
 
-                    <div class="bg-white/90 border border-jp-timeBorder rounded-xl p-2 mb-3 text-center shadow-inner">
+                    <svg class="calendar-moons" viewBox="0 0 200 28" aria-hidden="true">
+    <path d="M8 14h184" stroke="#d7b77a" stroke-opacity=".25" stroke-dasharray="1 4"/>
+    <g fill="#d7b77a" stroke="#d7b77a" stroke-width=".75">
+      <circle cx="18" cy="14" r="5" fill="#252228"/><path d="M47 8a6 6 0 1 1 0 12 8 8 0 0 0 0-12Z"/>
+      <circle cx="74" cy="14" r="6" fill="#252228"/><path d="M74 8a6 6 0 0 1 0 12Z"/>
+      <circle cx="100" cy="14" r="8"/><circle cx="126" cy="14" r="6" fill="#252228"/><path d="M126 8a6 6 0 0 0 0 12Z"/>
+      <path d="M153 8a6 6 0 1 0 0 12 8 8 0 0 1 0-12Z"/><circle cx="182" cy="14" r="5" fill="#252228"/>
+    </g>
+</svg>
+                    <div class="calendar-clock">
                         <div id="live-clock-time" class="font-mono text-xl font-extrabold text-jp-timeText tracking-wider">00:00:00</div>
                         <div id="live-clock-date" class="text-[10px] uppercase tracking-widest text-emerald-700 font-semibold mt-0.5">--.--.----</div>
                     </div>
@@ -652,6 +696,11 @@ button,label { touch-action:manipulation; }
                         <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
                     </div>
                     <div id="calendar-days-grid" class="grid grid-cols-7 gap-1 text-center text-xs"></div>
+                    <div class="calendar-legend" aria-label="Виды задач">
+                        <span><i class="calendar-marker" data-kind="school" aria-hidden="true"></i>Пары</span>
+                        <span><i class="calendar-marker" data-kind="reload" aria-hidden="true"></i>Reload</span>
+                        <span><i class="calendar-marker" data-kind="other" aria-hidden="true"></i>Остальное</span>
+                    </div>
                 </div>
 
                 <section class="due-panel w-full" aria-label="Сегодня и просрочено">
@@ -2059,12 +2108,6 @@ button,label { touch-action:manipulation; }
                 if (item.subtask.lessonSubject || String(item.subtask.id).startsWith('reload_lesson_')) return 'school';
                 return this.isReloadTask(this.tasks.find(t=>t.id===item.parentTaskId)) ? 'reload' : 'other';
             }
-            calendarColors(items) {
-                const kinds = new Set(items.map(item=>this.calendarKind(item)));
-                const colors = [['school','#2563eb'],['reload','#059669'],['other','#8b5cf6']].filter(([kind])=>kinds.has(kind)).map(([,color])=>color);
-                return colors.length===1 ? colors[0] : 'linear-gradient(135deg,'+colors.map((color,i)=>color+' '+(i*100/colors.length)+'%,'+color+' '+((i+1)*100/colors.length)+'%').join(',')+')';
-            }
-
             renderCalendar() {
                 this.renderDueItems();
                 const monthYearEl = document.getElementById('calendar-month-year');
@@ -2120,7 +2163,6 @@ button,label { touch-action:manipulation; }
                 const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
                 for (let day = 1; day <= daysInMonth; day++) {
-                    const dayCell = document.createElement('div');
                     const dayStr = String(day).padStart(2, '0');
                     const monthStr = String(month + 1).padStart(2, '0');
                     const fullDateStr = `${dayStr}.${monthStr}.${year}`;
@@ -2128,22 +2170,28 @@ button,label { touch-action:manipulation; }
                     const isToday = isCurrentMonth && today.getDate() === day;
                     const hasTasks = !!taskDatesMap[fullDateStr];
 
-                    dayCell.className = `py-1 rounded-lg text-center font-medium transition-all duration-200 ${
-                        hasTasks ? 'cal-day-has-task cursor-pointer hover:scale-110' + (taskDatesMap[fullDateStr].some(item => this.isReloadTask(this.tasks.find(t => t.id === item.parentTaskId))) ? (taskDatesMap[fullDateStr].some(item => !this.isReloadTask(this.tasks.find(t => t.id === item.parentTaskId))) ? ' cal-day-mixed' : ' cal-day-reload') : '') : 
-                        isToday ? 'bg-emerald-300 font-bold text-emerald-900 shadow-sm' : 
-                        'hover:bg-emerald-200/50 text-jp-textDark'
-                    }`;
-
+                    const dayCell = document.createElement(hasTasks ? 'button' : 'div');
+                    dayCell.className = 'moon-day';
+                    dayCell.textContent = day;
+                    if (isToday) dayCell.setAttribute('aria-current', 'date');
                     if (hasTasks) {
-                        dayCell.classList.remove('cal-day-mixed','cal-day-reload');
-                        dayCell.style.setProperty('background',this.calendarColors(taskDatesMap[fullDateStr]),'important');
-                        dayCell.style.boxShadow='0 0 9px #33415555';
-                    }
-                    dayCell.innerText = day;
-
-                    if (hasTasks) {
-                        dayCell.title = `Есть задачи (${taskDatesMap[fullDateStr].length})`;
-                        dayCell.onclick = () => this.openCalendarDayModal(fullDateStr, taskDatesMap[fullDateStr]);
+                        const items = taskDatesMap[fullDateStr];
+                        const kinds = new Set(items.map(item => this.calendarKind(item)));
+                        const markers = document.createElement('span');
+                        markers.className = 'calendar-markers';
+                        markers.setAttribute('aria-hidden', 'true');
+                        const labels = { school: 'пары', reload: 'Reload', other: 'остальные задачи' };
+                        for (const kind of ['school', 'reload', 'other']) {
+                            if (!kinds.has(kind)) continue;
+                            const marker = document.createElement('i');
+                            marker.className = 'calendar-marker';
+                            marker.dataset.kind = kind;
+                            markers.appendChild(marker);
+                        }
+                        dayCell.type = 'button';
+                        dayCell.appendChild(markers);
+                        dayCell.setAttribute('aria-label', fullDateStr + ' · ' + [...kinds].map(kind => labels[kind]).join(', '));
+                        dayCell.onclick = () => this.openCalendarDayModal(fullDateStr, items);
                     }
 
                     grid.appendChild(dayCell);
@@ -2182,11 +2230,8 @@ button,label { touch-action:manipulation; }
                     const sub = item.subtask;
                     const card = document.createElement('div');
                     card.className = 'p-3 bg-purple-50 border border-purple-200 rounded-xl flex flex-col gap-1 shadow-sm';
-                    if (this.calendarKind(item)==='reload') card.classList.add('reload-calendar-card');
-                    if (this.calendarKind(item)==='school') {
-                        card.classList.add('school-calendar-card');
-                        card.style.background='#eff6ff'; card.style.borderColor='#93c5fd';
-                    }
+                    card.classList.add('calendar-event');
+                    card.dataset.kind = this.calendarKind(item);
                     
                     let timeDisplay = '';
                     if (sub.timeStart && sub.timeEnd) {
