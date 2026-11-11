@@ -3565,6 +3565,9 @@ button,label { touch-action:manipulation; }
     };
 })();
 
+        NitochkaApp.prototype.conflictKey = function(a, b) {
+            return JSON.stringify([a.date, ...[a.nodeId || a.title, b.nodeId || b.title].sort()]);
+        };
         NitochkaApp.prototype.findTimeConflicts = function() {
             const lessons = {weekly:[],periods:{},subjects:{}};
             const minutes = s => { if(!/^\d{2}:\d{2}$/.test(s||'')) return null; const [h,m]=s.split(':').map(Number); return h<24&&m<60?h*60+m:null; };
@@ -3583,12 +3586,19 @@ button,label { touch-action:manipulation; }
                 for(let j=i+1;j<events.length;j++) if(a.date===events[j].date&&overlaps(a,events[j]))pairs.push([a,events[j]]);
                 // Until week parity is known, compare only lessons shared by both weeks.
                 for(const lesson of lessons.weekly.filter(l=>l.day===a.day&&l.parity==='all')) {
+                    const scheduled = this.tasks.flatMap(task => task.subtasks || []).find(node =>
+                        node.lessonSubject === lesson.subject && node.lessonPeriod === lesson.period && node.dateStart === a.date);
+                    if (scheduled) continue;
+
                     const times=lessons.periods[lesson.period];
                     const b={title:lessons.subjects[lesson.subject].teacher+' ('+lesson.period+'-я пара)',start:minutes(times[0]),end:minutes(times[1]),time:times.join('–')};
                     if(!a.title.includes(b.title)&&overlaps(a,b))pairs.push([a,b]);
                 }
             }
-            return pairs;
+            return pairs.filter(([a,b]) => {
+                const node = this.tasks.find(task => task.id === a.taskId)?.subtasks?.find(node => node.id === a.nodeId);
+                return !(node?.dismissedConflicts || []).includes(this.conflictKey(a,b));
+            });
         };
         const renderDueWithConflicts = NitochkaApp.prototype.renderDueItems;
         NitochkaApp.prototype.renderDueItems = function() {
@@ -3600,7 +3610,25 @@ button,label { touch-action:manipulation; }
                 const title=document.createElement('span');title.textContent=a.title+' ↔ '+b.title;
                 const time=document.createElement('small');time.style.cssText='color:#1d4ed8;font-weight:700';time.textContent=a.date+' · '+a.time+' / '+b.time;
                 button.appendChild(title);button.appendChild(time);
-                button.onclick=()=>{this.openCanvas(a.taskId);this.openSubtaskModal(a.nodeId);};list.appendChild(button);
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.textContent = 'Убрать смежность';
+                remove.hidden = true;
+                remove.style.cssText = 'padding:8px;color:#172554;background:#dbeafe;border-radius:8px;margin-bottom:8px';
+                button.setAttribute('aria-expanded', 'false');
+                button.onclick = () => {
+                    remove.hidden = !remove.hidden;
+                    button.setAttribute('aria-expanded', String(!remove.hidden));
+                };
+                remove.onclick = () => {
+                    const node = this.tasks.find(task => task.id === a.taskId)?.subtasks?.find(node => node.id === a.nodeId);
+                    if (!node) return;
+                    const key = this.conflictKey(a,b);
+                    node.dismissedConflicts = [...new Set([...(node.dismissedConflicts || []), key])];
+                    this.saveToStorage();
+                };
+                list.appendChild(button);
+                list.appendChild(remove);
             }
         };
 
