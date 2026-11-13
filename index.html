@@ -3784,6 +3784,9 @@ button,label { touch-action:manipulation; }
         const price = Number(document.getElementById('rwb-price').value);
         const picks = Number(document.getElementById('rwb-picks').value);
         const output = document.getElementById('rwb-estimate');
+        const target = document.getElementById('rwb-target-picks');
+        const needed = price > 0 && Number.isFinite(price) ? Math.ceil(11000 / price) : null;
+        target.textContent = Number.isSafeInteger(needed) ? needed.toLocaleString('ru-RU') + ' пиков' : 'Укажи цену пика';
         output.textContent = validMoney(price) && Number.isSafeInteger(picks) && picks >= 0 && Number.isFinite(price * picks)
             ? this.formatMoney(price * picks) + ' ₽' : '—';
     };
@@ -3922,7 +3925,8 @@ button,label { touch-action:manipulation; }
             ${enabled ? `<div class="rwb-body">${activeHtml}${activeEarnings}
             <div class="rwb-calculator"><label>Цена пика, ₽<input id="rwb-price" type="number" min="0" step="any" value="${this.rwb.price}" oninput="app.updateRwbEstimatePreview()" onchange="app.changeRwbEstimate()"></label>
             <label>Пиков за смену<input id="rwb-picks" type="number" min="0" step="1" value="${this.rwb.picks}" oninput="app.updateRwbEstimatePreview()" onchange="app.changeRwbEstimate()"></label>
-            <div class="rwb-estimate"><small>Ориентир за смену</small><strong id="rwb-estimate">${this.formatMoney(this.rwb.price * this.rwb.picks)} ₽</strong></div></div>
+            <div class="rwb-estimate"><small>Ориентир за смену</small><strong id="rwb-estimate">${this.formatMoney(this.rwb.price * this.rwb.picks)} ₽</strong></div>
+            <div class="rwb-target" style="grid-column:1/-1;padding:10px;border:1px solid #e2aad866;border-radius:10px;background:#25142e33"><small>Цель 11 000 ₽ за 13 часов</small><strong id="rwb-target-picks" style="display:block;margin-top:4px;color:#ffe2f5;font-size:18px">${this.rwb.price > 0 && Number.isSafeInteger(Math.ceil(11000 / this.rwb.price)) ? Math.ceil(11000 / this.rwb.price).toLocaleString('ru-RU') + ' пиков' : 'Укажи цену пика'}</strong></div></div>
             <label>Последний баланс, ₽<input id="rwb-balance" type="number" min="0" step="0.01" value="${this.rwb.lastBalance ?? ''}" onchange="app.changeRwbBalance(this)"></label>
             ${rows ? '<details class="rwb-history"><summary>Смены · ' + shifts.length + '</summary>' + rows + '</details>' : ''}</div>` : ''}`;
         this.tickRwb();
