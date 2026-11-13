@@ -613,6 +613,45 @@ button,label { touch-action:manipulation; }
 #calendar-day-modal .calendar-event [class*="text-purple-"] { color:#594436; }
 #calendar-day-modal .calendar-event [class*="bg-purple-"] { background:#eee3d5; }
 </style>
+<style id="rwb-wallet-styles">#rwb-root { border:1px solid #c5b3df; border-radius:18px; padding:12px 14px; color:#79618d; background:#faf7ff; }
+#rwb-root.rwb-enabled { color:#fff1fd; border-color:#b467bf; background:radial-gradient(ellipse at top right,#ec70ab33,transparent 65%),linear-gradient(145deg,#30214f,#632a74 60%,#9e3b78);box-shadow:inset 0 1px 0 #fbe6ff44,0 6px 22px #6a2b6c26; }
+.rwb-heading,.rwb-row { display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.rwb-heading { font-weight:700;font-size:13px;letter-spacing:.04em; }
+#rwb-root .rwb-toggle { border:1px solid #cbb6dc80;background:transparent;color:inherit;border-radius:50%;width:30px;height:30px;font-size:22px;opacity:.75; }
+.rwb-body { display:grid;gap:14px;padding-top:14px; }
+#rwb-root button:not(.rwb-toggle) { min-height:38px;padding:8px 10px;border-radius:10px;font-size:11px;font-weight:700;background:linear-gradient(120deg,#e9c8ff,#ffcae1);color:#45234f;border:1px solid #f4d8ff66; }
+#rwb-root .rwb-secondary { background:#ffffff0d !important;color:#f8dfff !important;border:1px solid #dda4df77 !important; }
+.rwb-actions { display:flex;gap:7px;flex-wrap:wrap; }
+.rwb-timer-box { background:#22152c66;border:1px solid #edb2e345;border-radius:13px;padding:12px;display:grid;gap:4px; }
+#rwb-timer { font:700 29px/1.4 ui-monospace,monospace;color:#ffe2f5;font-variant-numeric:tabular-nums; }
+#rwb-root label { display:grid;gap:5px;font-size:11px;color:#f4d1ec; }
+#rwb-root input { width:100%;min-width:0;border-radius:8px;padding:8px;border:1px solid #ca91cc88;background:#26172d77;color:#fff4fd;font-size:14px; }
+#rwb-root small { display:block;font-size:10px;color:#e8c5e0; }
+.rwb-calculator { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;border-top:1px solid #d998d044;padding-top:12px; }
+.rwb-estimate { grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.rwb-estimate strong { font-size:20px;color:#ffe2f5; }
+.rwb-shift { display:grid;gap:7px;padding:12px 0;border-top:1px solid #d998d044; }
+.rwb-history { font-size:12px; }
+.rwb-history summary { cursor:pointer;padding:8px 0; }
+#rwb-root .rwb-up { color:#9df0b5;font-weight:700; }
+#rwb-root .rwb-down { color:#ffb3b3;font-weight:700; }
+.wallet-section-heading { flex-wrap:wrap;gap:8px; }
+.wallet-add { flex-shrink:0;font-size:22px;font-weight:400;width:30px;height:30px;border:1px solid #c0d8f6;border-radius:50%;color:#729fcf;background:#faf7f2;opacity:.8; }
+.pouch-card[data-wallet="pearl"] { --wallet-dark:#4e415d;--wallet-color:#b3a5bf;--wallet-pattern:radial-gradient(ellipse at 30% 20%,#fff0 30%,#e6dced 32%,#fff0 36%);--wallet-pattern-size:35px 25px; }
+.pouch-card[data-wallet="graphite"] { --wallet-dark:#141c25;--wallet-color:#435364;--wallet-pattern:repeating-linear-gradient(135deg,transparent 0 9px,#cad5e6 10px,transparent 11px 20px);--wallet-pattern-size:30px 30px; }
+.nitochka-dialog { width:calc(100% - 24px);max-width:400px;max-height:90dvh;overflow:auto;border:1px solid #c0d8f6;border-radius:20px;padding:22px;background:#faf7f2;color:#2c3539;box-shadow:0 22px 70px #25203455; }
+.nitochka-dialog::backdrop { background:#24202d99; }
+.nitochka-dialog h3 { font-size:17px;font-weight:700;color:#5c7e9e;margin-bottom:16px; }
+.nitochka-dialog form { display:grid;gap:13px; }
+.nitochka-dialog label { display:grid;gap:5px;font-size:12px;color:#5c7e9e; }
+.nitochka-dialog input,.nitochka-dialog select { width:100%;padding:10px;border:1px solid #c0d8f6;border-radius:9px;background:white;font-size:16px;color:#2c3539; }
+.nitochka-dialog button { padding:10px 13px;border-radius:10px;border:1px solid #c0d8f6;font-size:12px; }
+.nitochka-dialog button[type="submit"] { background:#729fcf;color:white; }
+.nitochka-dialog .dialog-actions { display:flex;justify-content:flex-end;gap:9px; }
+#wallet-preview { padding:15px;border-radius:12px;font-weight:700;margin:0; }
+#rwb-time-error { color:#a12e54;font-size:12px; }
+@media(max-width:767px) { #rwb-root input { font-size:16px; } #rwb-root button { min-height:42px; } }
+</style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between bg-japanese-pattern selection:bg-jp-skyPale selection:text-jp-textDark">
@@ -707,12 +746,14 @@ button,label { touch-action:manipulation; }
                     <h3>Сегодня / просрочено</h3>
                     <div id="due-items"></div>
                 </section>
+                <section id="rwb-root" class="w-full" aria-label="Отдел RWB"></section>
                 <!-- 5 BALANCES (POUCHES) UNDER CALENDAR -->
                 <div class="w-full bg-white/90 border-2 border-jp-skyPale rounded-2xl p-3.5 shadow-md flex flex-col gap-2.5">
-                    <div class="flex items-center justify-between border-b border-jp-skyPale/50 pb-2">
+                    <div class="wallet-section-heading flex items-center justify-between border-b border-jp-skyPale/50 pb-2">
                         <span class="font-serif text-xs font-bold text-jp-sky flex items-center gap-1.5 uppercase tracking-wide">
                             <span>🌸</span> Баланс Монеток
                         </span>
+                        <button type="button" class="wallet-add" aria-label="Добавить кошелёк" title="Добавить кошелёк" onclick="app.openNewWallet()">+</button>
                         <span id="total-pouches-sum" class="font-mono font-extrabold text-xs text-jp-skyMuted">0 🌸</span>
                     </div>
 
@@ -1191,25 +1232,43 @@ button,label { touch-action:manipulation; }
         </div>
     </div>
     <script>window.NITOCHKA_RELOAD_UPDATES=[];window.NITOCHKA_RELOAD_CARDS=[];</script>
-<script>if(localStorage.getItem("nitochka_mobile_pouches")===null)localStorage.setItem("nitochka_mobile_pouches","[{\"id\":\"azure\",\"name\":\"Лазурный мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"crimson\",\"name\":\"Багряный мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"emerald\",\"name\":\"Изумрудный мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"amber\",\"name\":\"Янтарный мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"solferino\",\"name\":\"Сольферино мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"violet\",\"name\":\"Фиолетовый мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"copper\",\"name\":\"Медный мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"},{\"id\":\"silver\",\"name\":\"Серебряный мешочек\",\"balance\":0,\"color\":\"#729fcf\",\"bgClass\":\"bg-white\"}]");</script>
+
+
+    <dialog id="new-wallet-dialog" class="nitochka-dialog">
+        <h3>Новый мешочек</h3>
+        <form id="new-wallet-form" onsubmit="app.createWallet(event)">
+            <label>Оформление<select id="wallet-theme" onchange="app.previewNewWallet()"></select></label>
+            <div id="wallet-preview" class="pouch-card"></div>
+            <label>Начальная сумма<input id="wallet-balance" type="number" min="0" step="0.01" value="0" required></label>
+            <label>Назначение · необязательно<input id="wallet-purpose" type="text" maxlength="80" placeholder=""></label>
+            <div class="dialog-actions"><button type="button" onclick="document.getElementById('new-wallet-dialog').close()">Отмена</button><button type="submit">Добавить</button></div>
+        </form>
+    </dialog>
+    <dialog id="rwb-times-dialog" class="nitochka-dialog">
+        <h3>Время рабочего дня</h3>
+        <form onsubmit="app.saveRwbTimes(event)">
+            <label>Выход на работу<input id="rwb-time-departedAt" type="datetime-local"></label>
+            <label>Начало смены<input id="rwb-time-workStart" type="datetime-local"></label>
+            <label>Конец смены<input id="rwb-time-workEnd" type="datetime-local"></label>
+            <label>Возвращение домой<input id="rwb-time-homeAt" type="datetime-local"></label>
+            <p id="rwb-time-error" role="alert"></p>
+            <div class="dialog-actions"><button type="button" onclick="document.getElementById('rwb-times-dialog').close()">Отмена</button><button type="submit">Сохранить</button></div>
+        </form>
+    </dialog>
+
     <script>
         class NitochkaApp {
             constructor() {
                 this.tasks = JSON.parse(localStorage.getItem('nitochka_mobile_jp_v3_db')) || [];
                 
                 // DATA FOR 8 BALANCES (POUCHES)
-                this.pouches = JSON.parse(localStorage.getItem('nitochka_mobile_pouches')) || [
-                    { id: 'azure', name: 'Лазурный мешочек', color: '#0284C7', bgClass: 'bg-sky-50 border-sky-300 text-sky-800', balance: 0, iconSvg: '<path d="M12 2a5 5 0 00-5 5c0 1.5.7 2.8 1.8 3.7A8 8 0 003 18v2a1 1 0 001 1h16a1 1 0 001-1v-2a8 8 0 00-5.8-7.3A5 5 0 0017 7a5 5 0 00-5-5z" fill="#38BDF8"/>' },
-                    { id: 'crimson', name: 'Багряный мешочек', color: '#DC2626', bgClass: 'bg-red-50 border-red-300 text-red-800', balance: 0, iconSvg: '<path d="M12 2a5 5 0 00-5 5c0 1.5.7 2.8 1.8 3.7A8 8 0 003 18v2a1 1 0 001 1h16a1 1 0 001-1v-2a8 8 0 00-5.8-7.3A5 5 0 0017 7a5 5 0 00-5-5z" fill="#F87171"/>' },
-                    { id: 'emerald', name: 'Изумрудный мешочек', color: '#059669', bgClass: 'bg-emerald-50 border-emerald-300 text-emerald-800', balance: 0, iconSvg: '<path d="M12 2a5 5 0 00-5 5c0 1.5.7 2.8 1.8 3.7A8 8 0 003 18v2a1 1 0 001 1h16a1 1 0 001-1v-2a8 8 0 00-5.8-7.3A5 5 0 0017 7a5 5 0 00-5-5z" fill="#34D399"/>' },
-                    { id: 'amber', name: 'Янтарный мешочек', color: '#D97706', bgClass: 'bg-amber-50 border-amber-300 text-amber-800', balance: 0, iconSvg: '<path d="M12 2a5 5 0 00-5 5c0 1.5.7 2.8 1.8 3.7A8 8 0 003 18v2a1 1 0 001 1h16a1 1 0 001-1v-2a8 8 0 00-5.8-7.3A5 5 0 0017 7a5 5 0 00-5-5z" fill="#FBBF24"/>' },
-                    { id: 'solferino', name: 'Сольферино мешочек', color: '#E11D48', bgClass: 'bg-rose-50 border-rose-300 text-rose-800', balance: 0, iconSvg: '<path d="M12 2a5 5 0 00-5 5c0 1.5.7 2.8 1.8 3.7A8 8 0 003 18v2a1 1 0 001 1h16a1 1 0 001-1v-2a8 8 0 00-5.8-7.3A5 5 0 0017 7a5 5 0 00-5-5z" fill="#FB7185"/>' }
-                ];
+                this.pouches = JSON.parse(localStorage.getItem('nitochka_mobile_pouches')) || [];
 
                 this.ensureExtraPouches();
 
                 // DATA FOR TRANSACTIONS
                 this.transactions = JSON.parse(localStorage.getItem('nitochka_mobile_transactions')) || [];
+                this.rwb = this.normalizeRwb(JSON.parse(localStorage.getItem('nitochka_mobile_rwb')));
                 this.statsPeriod = 'all';
 
                 this.activeTaskId = null;
@@ -1280,7 +1339,7 @@ button,label { touch-action:manipulation; }
             }
 
             dataSnapshot() {
-                return JSON.stringify({ tasks: this.tasks, pouches: this.pouches, transactions: this.transactions });
+                return JSON.stringify({ tasks: this.tasks, pouches: this.pouches, transactions: this.transactions, rwb: this.rwb });
             }
 
             saveToStorage(recordUndo = true) {
@@ -1289,6 +1348,7 @@ button,label { touch-action:manipulation; }
                     localStorage.setItem('nitochka_mobile_jp_v3_db', JSON.stringify(this.tasks));
                     localStorage.setItem('nitochka_mobile_pouches', JSON.stringify(this.pouches));
                     localStorage.setItem('nitochka_mobile_transactions', JSON.stringify(this.transactions));
+                    localStorage.setItem('nitochka_mobile_rwb', JSON.stringify(this.rwb));
                     if (recordUndo && snapshot !== this.lastSnapshot) {
                         this.undoStack.push(this.lastSnapshot);
                         if (this.undoStack.length > 30) this.undoStack.shift();
@@ -1301,12 +1361,14 @@ button,label { touch-action:manipulation; }
                 this.updateUtilityStatus();
                 this.renderCalendar();
                 this.renderDashboard();
+                if (!this.rwbInputChange) this.renderRwb();
             }
 
             undoLastAction() {
                 if (!this.undoStack.length || this.draggedNodeId || this.isDraggingCanvas) return;
                 const data = JSON.parse(this.undoStack.pop());
                 this.tasks = data.tasks; this.pouches = data.pouches; this.transactions = data.transactions;
+                this.rwb = this.normalizeRwb(data.rwb);
                 this.connectingState = null;
                 this.cancelPlacementMode();
                 this.closeSubtaskModal();
@@ -1363,18 +1425,7 @@ button,label { touch-action:manipulation; }
             }
 
             /* --- POUCHES (8 BALANCES) METHODS --- */
-            ensureExtraPouches() {
-                const extras = [
-                    { id: 'violet', name: 'Фиолетовый мешочек', color: '#8B5CF6', bgClass: 'bg-violet-50 border-violet-300 text-violet-800', fill: '#A78BFA' },
-                    { id: 'copper', name: 'Медный мешочек', color: '#C46A36', bgClass: 'bg-orange-50 border-orange-300 text-orange-800', fill: '#FB923C' },
-                    { id: 'silver', name: 'Серебряный мешочек', color: '#64748B', bgClass: 'bg-slate-50 border-slate-300 text-slate-800', fill: '#CBD5E1' }
-                ];
-                extras.forEach(({ fill, ...pouch }) => {
-                    if (!this.pouches.some(p => p.id === pouch.id)) {
-                        this.pouches.push({ ...pouch, balance: 0, iconSvg: '<path d="M12 2a5 5 0 00-5 5c0 1.5.7 2.8 1.8 3.7A8 8 0 003 18v2a1 1 0 001 1h16a1 1 0 001-1v-2a8 8 0 00-5.8-7.3A5 5 0 0017 7a5 5 0 00-5-5z" fill="' + fill + '"/>' });
-                    }
-                });
-            }
+            ensureExtraPouches() {}
 
             editPouchName(pouch, heading) {
                 if (heading.isContentEditable) return;
@@ -1442,7 +1493,7 @@ button,label { touch-action:manipulation; }
                     const card = document.createElement('div');
                     card.className = `pouch-card border p-2.5 rounded-xl flex items-center justify-between shadow-sm`;
 
-                    card.dataset.wallet = pouch.id;
+                    card.dataset.wallet = pouch.theme || pouch.id;
                     card.innerHTML = `
                         <div class="flex items-center gap-2">
                             <div>
@@ -3342,7 +3393,8 @@ button,label { touch-action:manipulation; }
                 const backup = new Blob([JSON.stringify({
                     tasks: this.tasks,
                     pouches: this.pouches,
-                    transactions: this.transactions
+                    transactions: this.transactions,
+                    rwb: this.rwb
                 })], { type: 'application/json' });
 
                 let handle;
@@ -3423,6 +3475,7 @@ button,label { touch-action:manipulation; }
                                 this.ensureExtraPouches();
                             }
 
+                            if (importedData.rwb !== undefined) this.rwb = this.normalizeRwb(importedData.rwb);
                             if (Array.isArray(importedData.transactions)) {
                                 this.transactions = importedData.transactions;
                             }
@@ -3644,6 +3697,245 @@ button,label { touch-action:manipulation; }
                 return result;
             };
         }
+
+(() => {
+    const hour = 3600000;
+    const themes = [
+        ['azure', 'Лазурный', '#1456a0'], ['crimson', 'Багряный', '#971e3c'],
+        ['emerald', 'Изумрудный', '#08704f'], ['amber', 'Янтарный', '#ac7d13'],
+        ['solferino', 'Сольферино', '#bb168e'], ['violet', 'Фиолетовый', '#7035a0'],
+        ['copper', 'Медный', '#b45e32'], ['silver', 'Серебряный', '#65758a'],
+        ['pearl', 'Жемчужный', '#927da0'], ['graphite', 'Графитовый', '#364252']
+    ];
+    const proto = NitochkaApp.prototype;
+    const emptyRwb = () => ({ enabled: false, active: null, shifts: [], price: 0, picks: 0, lastBalance: null });
+    const validMoney = value => Number.isFinite(Number(value)) && Number(value) >= 0;
+    const localDateTime = value => {
+        if (!value) return '';
+        const date = new Date(value);
+        return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    };
+
+    proto.normalizeRwb = function (value) {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return emptyRwb();
+        const result = { ...emptyRwb(), ...value };
+        result.enabled = !!result.enabled;
+        result.shifts = Array.isArray(result.shifts) ? result.shifts : [];
+        if (!result.active || !Number.isFinite(result.active.departedAt)) result.active = null;
+        if (!validMoney(result.price)) result.price = 0;
+        if (!validMoney(result.picks)) result.picks = 0;
+        return result;
+    };
+
+    proto.openNewWallet = function () {
+        const dialog = document.getElementById('new-wallet-dialog');
+        const select = document.getElementById('wallet-theme');
+        select.innerHTML = '';
+        for (const [id, name] of themes) {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = name + ' мешочек';
+            select.appendChild(option);
+        }
+        document.getElementById('new-wallet-form').reset();
+        this.previewNewWallet();
+        dialog.showModal();
+    };
+    proto.previewNewWallet = function () {
+        const id = document.getElementById('wallet-theme').value;
+        const theme = themes.find(theme => theme[0] === id) || themes[0];
+        const preview = document.getElementById('wallet-preview');
+        preview.dataset.wallet = theme[0];
+        preview.textContent = theme[1] + ' мешочек';
+    };
+    proto.createWallet = function (event) {
+        event.preventDefault();
+        const theme = themes.find(theme => theme[0] === document.getElementById('wallet-theme').value);
+        const balance = Number(document.getElementById('wallet-balance').value);
+        if (!theme || !validMoney(balance)) return;
+        const purpose = document.getElementById('wallet-purpose').value.trim();
+        this.pouches.push({
+            id: 'pouch_' + crypto.randomUUID(), theme: theme[0],
+            name: theme[1] + ' мешочек' + (purpose ? ' (' + purpose + ')' : ''),
+            balance: Math.round(balance * 100) / 100, color: theme[2], bgClass: 'bg-white'
+        });
+        this.saveToStorage();
+        this.renderPouches();
+        document.getElementById('new-wallet-dialog').close();
+    };
+
+    proto.toggleRwb = function () {
+        this.rwb.enabled = !this.rwb.enabled;
+        this.saveToStorage();
+    };
+    proto.saveRwbInputs = function () {
+        this.rwbInputChange = true;
+        try { this.saveToStorage(); } finally { this.rwbInputChange = false; }
+    };
+    proto.changeRwbEstimate = function () {
+        const price = Number(document.getElementById('rwb-price').value);
+        const picks = Number(document.getElementById('rwb-picks').value);
+        if (!validMoney(price) || !Number.isSafeInteger(picks) || picks < 0 || !Number.isFinite(price * picks)) return;
+        this.rwb.price = price;
+        this.rwb.picks = picks;
+        this.saveRwbInputs();
+    };
+    proto.updateRwbEstimatePreview = function () {
+        const price = Number(document.getElementById('rwb-price').value);
+        const picks = Number(document.getElementById('rwb-picks').value);
+        const output = document.getElementById('rwb-estimate');
+        output.textContent = validMoney(price) && Number.isSafeInteger(picks) && picks >= 0 && Number.isFinite(price * picks)
+            ? this.formatMoney(price * picks) + ' ₽' : '—';
+    };
+    proto.changeRwbBalance = function (input) {
+        if (input.value === '') this.rwb.lastBalance = null;
+        else if (validMoney(input.value)) this.rwb.lastBalance = Math.round(Number(input.value) * 100) / 100;
+        else return;
+        this.saveRwbInputs();
+    };
+    proto.startRwbDay = function () {
+        if (this.rwb.active) return;
+        this.rwb.active = { id: 'shift_' + crypto.randomUUID(), departedAt: Date.now(), workStart: null, workEnd: null, homeAt: null, actual: null };
+        this.saveToStorage();
+    };
+    proto.startRwbWork = function () {
+        const active = this.rwb.active;
+        if (!active || active.workStart) return;
+        active.workStart = Date.now();
+        this.saveToStorage();
+    };
+    proto.finishRwbWork = function () {
+        const active = this.rwb.active;
+        if (!active?.workStart || active.workEnd) return;
+        active.workEnd = Date.now();
+        active.price = this.rwb.price;
+        active.picks = this.rwb.picks;
+        active.estimate = Math.round(this.rwb.price * this.rwb.picks * 100) / 100;
+        this.saveToStorage();
+    };
+    proto.completeRwbDay = function (homeAt = Date.now()) {
+        const active = this.rwb.active;
+        if (!active?.workEnd) return;
+        active.homeAt = Math.max(homeAt, active.workEnd);
+        if (!this.rwb.shifts.some(shift => shift.id === active.id)) this.rwb.shifts.push({ ...active });
+        this.rwb.active = null;
+        this.saveToStorage();
+    };
+    proto.rwbDuration = function (milliseconds) {
+        const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+        return [Math.floor(seconds / 3600), Math.floor(seconds / 60) % 60, seconds % 60].map(value => String(value).padStart(2, '0')).join(':');
+    };
+    proto.tickRwb = function () {
+        const active = this.rwb.active;
+        if (!active) return;
+        const now = Date.now();
+        if (!active.workStart && now >= active.departedAt + hour) {
+            active.workStart = active.departedAt + hour;
+            this.saveToStorage();
+            return;
+        }
+        if (active.workEnd && now >= active.workEnd + hour) {
+            this.completeRwbDay(active.workEnd + hour);
+            return;
+        }
+        const stage = !active.workStart ? 'Дорога на работу' : active.workEnd ? 'Дорога домой' : 'Смена';
+        const began = active.workEnd || active.workStart || active.departedAt;
+        const limit = stage === 'Смена' ? 13 * hour : hour;
+        const label = document.getElementById('rwb-stage');
+        if (!label) return;
+        label.textContent = stage;
+        document.getElementById('rwb-timer').textContent = this.rwbDuration(now - began);
+        document.getElementById('rwb-remaining').textContent = now - began >= limit
+            ? (stage === 'Дорога на работу' ? 'Час прошёл · начни смену, когда готов' : 'Сверх плана ' + this.rwbDuration(now - began - limit))
+            : 'Осталось ' + this.rwbDuration(limit - (now - began));
+        document.getElementById('rwb-total-time').textContent = 'Весь день ' + this.rwbDuration(now - active.departedAt);
+    };
+
+    proto.setRwbActual = function (id, input) {
+        const shift = id === 'active' ? this.rwb.active : this.rwb.shifts.find(shift => shift.id === id);
+        if (!shift || (input.value !== '' && !validMoney(input.value))) return;
+        shift.actual = input.value === '' ? null : Math.round(Number(input.value) * 100) / 100;
+        this.saveToStorage();
+    };
+    proto.openRwbTimes = function (id) {
+        const shift = id === 'active' ? this.rwb.active : this.rwb.shifts.find(shift => shift.id === id);
+        if (!shift) return;
+        this.rwbEditingId = id;
+        for (const key of ['departedAt', 'workStart', 'workEnd', 'homeAt']) {
+            const input = document.getElementById('rwb-time-' + key);
+            input.value = localDateTime(shift[key]);
+            input.required = key === 'departedAt' || (id !== 'active');
+            input.disabled = id === 'active' && !shift[key];
+        }
+        document.getElementById('rwb-time-error').textContent = '';
+        document.getElementById('rwb-times-dialog').showModal();
+    };
+    proto.saveRwbTimes = function (event) {
+        event.preventDefault();
+        const shift = this.rwbEditingId === 'active' ? this.rwb.active : this.rwb.shifts.find(shift => shift.id === this.rwbEditingId);
+        if (!shift) return;
+        const changed = {};
+        let previous = -Infinity;
+        for (const key of ['departedAt', 'workStart', 'workEnd', 'homeAt']) {
+            const input = document.getElementById('rwb-time-' + key);
+            const value = input.disabled || !input.value ? null : new Date(input.value).getTime();
+            if (value !== null && (!Number.isFinite(value) || value < previous || value > Date.now())) {
+                document.getElementById('rwb-time-error').textContent = 'Проверь порядок времени и будущие даты.';
+                return;
+            }
+            if (value !== null) previous = value;
+            changed[key] = value;
+        }
+        Object.assign(shift, changed);
+        this.saveToStorage();
+        this.tickRwb();
+        document.getElementById('rwb-times-dialog').close();
+    };
+
+    proto.renderRwb = function () {
+        const root = document.getElementById('rwb-root');
+        if (!root) return;
+        const enabled = this.rwb.enabled;
+        root.classList.toggle('rwb-enabled', enabled);
+        const active = this.rwb.active;
+        const activeEarnings = active?.workEnd ? `<label>Заработок за смену, ₽<input type="number" min="0" step="0.01" value="${active.actual ?? ''}" onchange="app.setRwbActual('active',this)"></label>` : '';
+        const activeHtml = active ? `<div class="rwb-timer-box"><span id="rwb-stage"></span><strong id="rwb-timer">00:00:00</strong><small id="rwb-remaining"></small><small id="rwb-total-time"></small></div>
+            <div class="rwb-actions">${!active.workStart ? '<button type="button" onclick="app.startRwbWork()">Начать смену</button>' : !active.workEnd ? '<button type="button" onclick="app.finishRwbWork()">Завершить смену</button>' : '<button type="button" onclick="app.completeRwbDay()">Я дома</button>'}
+            <button type="button" class="rwb-secondary" onclick="app.openRwbTimes(\'active\')">Исправить время</button></div>`
+            : '<button type="button" class="rwb-start" onclick="app.startRwbDay()">Начать рабочий день</button>';
+        const shifts = [...this.rwb.shifts].sort((a, b) => a.workStart - b.workStart);
+        const rows = shifts.map((shift, index) => {
+            const actual = shift.actual;
+            const previous = shifts.slice(0, index).reverse().find(item => item.actual !== null && Number.isFinite(item.actual));
+            let comparison = '';
+            if (actual !== null && Number.isFinite(actual) && previous) {
+                const difference = Math.round((actual - previous.actual) * 100) / 100;
+                const percent = previous.actual === 0 ? '' : ' · ' + (difference / previous.actual * 100).toFixed(1) + '%';
+                comparison = `<small class="${difference > 0 ? 'rwb-up' : difference < 0 ? 'rwb-down' : ''}">${difference > 0 ? '+' : ''}${this.formatMoney(difference)} ₽${percent}</small>`;
+            }
+            return `<div class="rwb-shift"><div class="rwb-row"><strong>${new Date(shift.workStart).toLocaleDateString('ru-RU')}</strong><button type="button" class="rwb-secondary" onclick="app.openRwbTimes('${this.escapeHtml(shift.id)}')">Время</button></div>
+                <small>Смена ${this.rwbDuration(shift.workEnd - shift.workStart)} · весь день ${this.rwbDuration(shift.homeAt - shift.departedAt)}</small>
+                ${Number.isFinite(shift.estimate) ? '<small>Прогноз ' + this.formatMoney(shift.estimate) + ' ₽</small>' : ''}
+                <label>Заработок за смену, ₽<input type="number" min="0" step="0.01" value="${actual ?? ''}" onchange="app.setRwbActual('${this.escapeHtml(shift.id)}',this)"></label>${comparison}</div>`;
+        }).reverse().join('');
+        root.innerHTML = `<div class="rwb-heading"><span>Отдел RWB</span><button type="button" class="rwb-toggle" aria-label="${enabled ? 'Свернуть' : 'Включить'} Отдел RWB" aria-expanded="${enabled}" onclick="app.toggleRwb()">${enabled ? '−' : '+'}</button></div>
+            ${enabled ? `<div class="rwb-body">${activeHtml}${activeEarnings}
+            <div class="rwb-calculator"><label>Цена пика, ₽<input id="rwb-price" type="number" min="0" step="any" value="${this.rwb.price}" oninput="app.updateRwbEstimatePreview()" onchange="app.changeRwbEstimate()"></label>
+            <label>Пиков за смену<input id="rwb-picks" type="number" min="0" step="1" value="${this.rwb.picks}" oninput="app.updateRwbEstimatePreview()" onchange="app.changeRwbEstimate()"></label>
+            <div class="rwb-estimate"><small>Ориентир за смену</small><strong id="rwb-estimate">${this.formatMoney(this.rwb.price * this.rwb.picks)} ₽</strong></div></div>
+            <label>Последний баланс, ₽<input id="rwb-balance" type="number" min="0" step="0.01" value="${this.rwb.lastBalance ?? ''}" onchange="app.changeRwbBalance(this)"></label>
+            ${rows ? '<details class="rwb-history"><summary>Смены · ' + shifts.length + '</summary>' + rows + '</details>' : ''}</div>` : ''}`;
+        this.tickRwb();
+    };
+
+    const originalInit = proto.init;
+    proto.init = function () {
+        originalInit.call(this);
+        this.renderRwb();
+        this.rwbTimer = setInterval(() => this.tickRwb(), 1000);
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) this.tickRwb(); });
+    };
+})();
 
         let app;
         window.addEventListener('DOMContentLoaded', () => {
