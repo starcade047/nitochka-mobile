@@ -1993,7 +1993,7 @@ button,label { touch-action:manipulation; }
                 for (const task of this.tasks.filter(t => this.isReloadTask(t))) {
                     for (const node of task.subtasks || []) {
                         const date = this.parseDate(node.dateEnd || node.dateStart);
-                        if (!node.reloadAuto || !date) continue;
+                        if (node.completed || !node.reloadAuto || !date) continue;
                         const time = (node.timeEnd || node.timeStart || '00:00').split(':');
                         date.setHours(+time[0] || 0, +time[1] || 0);
                         if (date <= this.reloadNow()) changed = this.nextReloadDate(node) || changed;
@@ -2249,13 +2249,37 @@ button,label { touch-action:manipulation; }
                 }
             }
 
+            finishCalendarTask(item, dateStr, taskItems) {
+                const task = this.tasks.find(task => task.id === item.parentTaskId);
+                const node = task?.subtasks?.find(node => node.id === item.subtask.id);
+                if (!node) return;
+                task.subtasks = task.subtasks.filter(subtask => subtask.id !== node.id);
+                task.threads = (task.threads || []).filter(thread =>
+                    thread.startAttached?.nodeId !== node.id && thread.endAttached?.nodeId !== node.id);
+                if (this.isReloadTask(task)) {
+                    const matchingTemplates = (window.NITOCHKA_RELOAD_CARDS || []).filter(entry =>
+                        entry.id === node.id || entry.names.some(name => name.trim().toLowerCase() === node.title.trim().toLowerCase()));
+                    if (matchingTemplates.length) task.reloadCreated = [...new Set([
+                        ...(task.reloadCreated || []), ...matchingTemplates.map(entry => entry.id)
+                    ])];
+                }
+                if (this.activeTaskId === task.id) this.connectingState = null;
+                this.saveToStorage();
+                if (this.activeTaskId === task.id) this.renderCanvasNodes();
+                this.openCalendarDayModal(dateStr, taskItems);
+            }
+
             openCalendarDayModal(dateStr, taskItems) {
                 this.schoolCanvasDay = dateStr.split('.').reverse().join('-');
                 document.getElementById('cal-modal-date-title').innerText = `Задачи на ${dateStr}`;
                 const listEl = document.getElementById('cal-modal-tasks-list');
                 listEl.innerHTML = '';
 
-                const visibleItems = taskItems.filter(item => !item.subtask.completed);
+                const visibleItems = taskItems.map(item => {
+                    const task = this.tasks.find(task => task.id === item.parentTaskId);
+                    const subtask = task?.subtasks?.find(node => node.id === item.subtask.id);
+                    return subtask && !subtask.completed ? { ...item, subtask } : null;
+                }).filter(Boolean);
                 const lessons = visibleItems.filter(item => this.calendarKind(item) === 'school' && item.subtask.dateStart === dateStr);
                 const markAttended = items => {
                     for (const { subtask } of items) {
@@ -2307,7 +2331,13 @@ button,label { touch-action:manipulation; }
                             </button>
                         </div>
                     `;
-                    if (lessons.includes(item)) card.appendChild(attendanceButton('Отметить посещение', [item]));
+                    const done = document.createElement('button');
+                    done.type = 'button';
+                    done.textContent = 'Сделано';
+                    done.title = 'Удалить эту карточку и прикреплённые к ней нити';
+                    done.style.cssText = 'padding:9px 14px;border-radius:9px;background:#594436;color:#fff7e6;font-size:12px;font-weight:700;align-self:flex-start;min-height:40px';
+                    done.onclick = () => this.finishCalendarTask(item, dateStr, taskItems);
+                    card.appendChild(done);
                     listEl.appendChild(card);
                 });
 
@@ -3258,9 +3288,8 @@ button,label { touch-action:manipulation; }
 
                 const node = task.subtasks.find(s => s.id === nodeId);
                 if (node) {
-                    if (this.isReloadTask(task) && !node.completed && node.reloadRepeat !== 'none' && this.nextReloadDate(node)) {
-                        // Keep the same card, connections and favorite; show only the next occurrence.
-                    } else node.completed = !node.completed;
+                    node.completed = !node.completed;
+                    if (node.lessonSubject) node.attendance = node.completed ? 'attended' : 'pending';
                     this.saveToStorage();
                     this.renderCanvasNodes();
                 }
@@ -3622,7 +3651,6 @@ button,label { touch-action:manipulation; }
             return JSON.stringify([a.date, ...[a.nodeId || a.title, b.nodeId || b.title].sort()]);
         };
         NitochkaApp.prototype.findTimeConflicts = function() {
-            const lessons = {weekly:[],periods:{},subjects:{}};
             const minutes = s => { if(!/^\d{2}:\d{2}$/.test(s||'')) return null; const [h,m]=s.split(':').map(Number); return h<24&&m<60?h*60+m:null; };
             const events=[];
             for(const task of this.tasks) for(const n of task.subtasks||[]) {
@@ -3637,20 +3665,12 @@ button,label { touch-action:manipulation; }
             for(let i=0;i<events.length;i++) {
                 const a=events[i];
                 for(let j=i+1;j<events.length;j++) if(a.date===events[j].date&&overlaps(a,events[j]))pairs.push([a,events[j]]);
-                // Until week parity is known, compare only lessons shared by both weeks.
-                for(const lesson of lessons.weekly.filter(l=>l.day===a.day&&l.parity==='all')) {
-                    const scheduled = this.tasks.flatMap(task => task.subtasks || []).find(node =>
-                        node.lessonSubject === lesson.subject && node.lessonPeriod === lesson.period && node.dateStart === a.date);
-                    if (scheduled) continue;
-
-                    const times=lessons.periods[lesson.period];
-                    const b={title:lessons.subjects[lesson.subject].teacher+' ('+lesson.period+'-я пара)',start:minutes(times[0]),end:minutes(times[1]),time:times.join('–')};
-                    if(!a.title.includes(b.title)&&overlaps(a,b))pairs.push([a,b]);
-                }
             }
             return pairs.filter(([a,b]) => {
                 const node = this.tasks.find(task => task.id === a.taskId)?.subtasks?.find(node => node.id === a.nodeId);
-                return !(node?.dismissedConflicts || []).includes(this.conflictKey(a,b));
+                const other = this.tasks.find(task => task.id === b.taskId)?.subtasks?.find(node => node.id === b.nodeId);
+                const key = this.conflictKey(a,b);
+                return ![...(node?.dismissedConflicts || []), ...(other?.dismissedConflicts || [])].includes(key);
             });
         };
         const renderDueWithConflicts = NitochkaApp.prototype.renderDueItems;
