@@ -1320,8 +1320,10 @@ button,label { touch-action:manipulation; }
 
             init() {
                 this.applyReloadUpdates();
+                if (this.ensureWeeklyReload()) this.saveToStorage(false);
                 this.reloadTimer = setInterval(() => {
-                    if (this.advanceReloadAutopay()) {
+                    const weeklyChanged = this.ensureWeeklyReload();
+                    if (this.advanceReloadAutopay() || weeklyChanged) {
                         this.saveToStorage();
                         if (this.activeTaskId) this.renderCanvasNodes();
                     }
@@ -1343,6 +1345,7 @@ button,label { touch-action:manipulation; }
             }
 
             saveToStorage(recordUndo = true) {
+                this.ensureWeeklyReload();
                 const snapshot = this.dataSnapshot();
                 try {
                     localStorage.setItem('nitochka_mobile_jp_v3_db', JSON.stringify(this.tasks));
@@ -1951,8 +1954,10 @@ button,label { touch-action:manipulation; }
 
             /* INTERACTIVE CALENDAR LOGIC */
             changeCalendarMonth(delta) {
+                this.currentCalDate.setDate(1);
                 this.currentCalDate.setMonth(this.currentCalDate.getMonth() + delta);
-                this.renderCalendar();
+                if (this.ensureWeeklyReload()) this.saveToStorage(false);
+                else this.renderCalendar();
             }
 
             isReloadTask(task) {
@@ -1966,6 +1971,72 @@ button,label { touch-action:manipulation; }
                 }).formatToParts(new Date());
                 const p = Object.fromEntries(parts.map(p => [p.type, p.value]));
                 return new Date(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute);
+            }
+
+            ensureWeeklyReload() {
+                const task = this.tasks.find(task => this.isReloadTask(task));
+                if (!task || !Array.isArray(task.subtasks)) return false;
+                const today = this.reloadNow();
+                today.setHours(0, 0, 0, 0);
+                const horizon = new Date(today);
+                horizon.setDate(horizon.getDate() + 14);
+                const displayedMonthEnd = new Date(this.currentCalDate.getFullYear(), this.currentCalDate.getMonth() + 1, 0);
+                const through = new Date(Math.max(horizon, displayedMonthEnd));
+                const definitions = [
+                    { key: 'drop', title: 'CS GO дроп', aliases: /^(?:cs\s*go(?:\s*дроп)?|cs2\s*дроп|дроп|кс го дроп)$/i, first: '18.11.2026', time: '' },
+                    { key: 'music', title: 'Музыка', aliases: /^(?:музыка|обновление музыки)$/i, first: '20.11.2026', time: '02:00' }
+                ];
+                const series = task.weeklyReload ||= {};
+                let changed = false;
+                const hobby = task.subtasks.find(node => node.title.trim().toLowerCase() === 'хобби');
+                const right = task.subtasks.filter(node => !node.lessonSubject && !node.weeklyReloadKey).reduce((max, node) => Math.max(max, Number(node.x) || 0), 0);
+                for (const [column, definition] of definitions.entries()) {
+                    let schedule = series[definition.key];
+                    if (!schedule) {
+                        const original = task.subtasks.find(node => definition.aliases.test(node.title.trim()));
+                        const originalDate = this.parseDate(original?.dateStart);
+                        const next = originalDate || this.parseDate(definition.first);
+                        if (originalDate) {
+                            original.weeklyReloadKey = definition.key;
+                            original.reloadRepeat = 'none';
+                            original.reloadAuto = false;
+                            next.setDate(next.getDate() + 7);
+                        }
+                        schedule = series[definition.key] = {
+                            next: this.formatDateToKey(next), sequence: 0,
+                            title: original?.title || definition.title,
+                            time: original?.timeStart || definition.time
+                        };
+                        changed = true;
+                    }
+                    const date = this.parseDate(schedule.next);
+                    if (!date) continue;
+                    for (let count = 0; date <= through && count < 104; count++, date.setDate(date.getDate() + 7)) {
+                        const day = this.formatDateToKey(date);
+                        const id = 'weekly_reload_' + definition.key + '_' + day.split('.').reverse().join('-');
+                        if (!task.subtasks.some(node => node.id === id || (node.weeklyReloadKey === definition.key && node.dateStart === day))) {
+                            const node = {
+                                id, title: schedule.title, note: '', amountSakura: 0,
+                                dateStart: day, dateEnd: day, timeStart: schedule.time, timeEnd: '',
+                                completed: false, isFavorite: false, images: [],
+                                reloadRepeat: 'none', reloadAuto: false, weeklyReloadKey: definition.key,
+                                x: right + 400 + column * 360, y: (hobby?.y || 0) + schedule.sequence * 150
+                            };
+                            task.subtasks.push(node);
+                            if (hobby) (task.threads ||= []).push({
+                                id: 'thread_' + id,
+                                startAttached: { nodeId: hobby.id, side: 'right' },
+                                endAttached: { nodeId: id, side: 'left' },
+                                startX: hobby.x + 256, startY: hobby.y + 55,
+                                endX: node.x, endY: node.y + 55
+                            });
+                            schedule.sequence++;
+                        }
+                        changed = true;
+                    }
+                    schedule.next = this.formatDateToKey(date);
+                }
+                return changed;
             }
 
             nextReloadDate(node) {
